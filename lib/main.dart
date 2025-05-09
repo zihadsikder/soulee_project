@@ -2,15 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-
-import 'app/data/core/binding/controller_binder.dart';
-import 'app/data/core/utils/constans/app_sizer.dart';
-import 'app/routes/app_pages.dart';
+import 'app.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -25,30 +21,3 @@ class PlatformUtils {
       foundation.defaultTargetPlatform == TargetPlatform.android;
 }
 
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, deviceType) {
-        return GetMaterialApp(
-          title: "Soulee Application",
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppPages.INITIAL,
-          getPages: AppPages.routes,
-          initialBinding: ControllerBinder(),
-          themeMode: ThemeMode.system,
-
-          defaultTransition: PlatformUtils.isIOS ? Transition.cupertino : Transition.fade,
-          locale: Get.deviceLocale,
-          builder: (context, child) => PlatformUtils.isIOS
-              ? CupertinoTheme(data: const CupertinoThemeData(), child: child!)
-              : child!,
-        );
-      },
-    );
-  }
-
-}
