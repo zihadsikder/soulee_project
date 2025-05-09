@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "537611970886",
+    "project_id": "soulee-b8f07",
+    "storage_bucket": "soulee-b8f07.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537611970886:android:0ae1d63bd1453547d2dd47",
+        "android_client_info": {
+          "package_name": "soulee.app.soulee_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrWluNrPVodxzCOXxik9e48fm30D725IA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
