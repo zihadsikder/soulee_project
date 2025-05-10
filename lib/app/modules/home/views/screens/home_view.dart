@@ -1,15 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:soulee_project/app/data/core/common/widgets/custom_text.dart';
 import 'package:soulee_project/app/data/core/utils/constans/app_sizer.dart';
+import 'package:soulee_project/app/data/core/utils/constans/icon_path.dart';
 import 'package:soulee_project/app/data/core/utils/constans/image_path.dart';
 import 'package:soulee_project/app/modules/home/controllers/home_controller.dart';
 
+import '../../../../data/core/utils/constans/app_color.dart';
 import '../widgets/highlights_row.dart';
 import '../widgets/profile_header_large.dart';
 import '../widgets/profile_post_grid_new.dart';
 import '../widgets/profile_tabs.dart';
-
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -20,320 +22,224 @@ class HomeView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(ImagePath.logo),
+        leading: Image.asset(ImagePath.logo, height: 28.h, width: 62.w),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Stack(
               clipBehavior: Clip.none,
-              children: [Container(
-            height: 200.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
-                child: CachedNetworkImage(
-                  imageUrl: controller.user.value.coverPhoto ?? '', // Use cover photo URL or fallback
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => CircularProgressIndicator(
-                    color: Color(0xFFFF5A60),
-                  ),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.broken_image,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+              children: [
+                Container(
+                  height: 179.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(color: Colors.red),
+                  child: Image.asset(ImagePath.cover, fit: BoxFit.fill),
+                  // CachedNetworkImage(
+                  //   imageUrl: controller.user.value.coverPhoto ?? '', // Use cover photo URL or fallback
+                  //   fit: BoxFit.cover,
+                  //   placeholder: (context, url) => CircularProgressIndicator(
+                  //     color: Color(0xFFFF5A60),
+                  //   ),
+                  //   errorWidget: (context, url, error) => Icon(
+                  //     Icons.broken_image,
+                  //     size: 50,
+                  //     color: Colors.grey,
+                  //   ),
+                  // ),
                 ),
-              ),
 
                 Positioned(
                   bottom: -50,
-                  left: 0,
+                  left: 20,
 
                   child: Stack(
-                children: [
-                Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
+                    children: [
+                      Container(
+                        width: 99.w,
+                        height: 103.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(180),
+                            topRight: Radius.circular(160),
+                            bottomLeft: Radius.circular(220),
+                            bottomRight: Radius.circular(210),
+                          ),
+                          //shape: BoxShape.circle,
+                          // border: Border.all(
+                          //   color: AppColors.primary,
+                          //   width: 2,
+                          // ),
+                        ),
+                        child: Image.asset(ImagePath.profile,fit: BoxFit.fill,  width: 99.w,
+                          height: 103.h,)
+                      ),
+                      Positioned(
+                        bottom: 2,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.30),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                  child: Obx(() {
-                    return CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                          controller.user.value.profilePicture ?? ''),
-                      backgroundColor: Colors.grey.shade300,
-                    );
-                  }),
-                ),
-      Positioned(
-        bottom: 0,
-        right: 0,
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: const BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.camera_alt,
-            color: Colors.white,
-            size: 20,
-          ),
-        ),
-      ),
-      ],
-    ),),
                 Positioned(
                   right: 10.w,
                   bottom: 10.h,
 
                   child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration:  BoxDecoration(
-                    color: Colors.white.withOpacity(0.10),
-                    shape: BoxShape.circle,
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.10),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),)
-              ],
-
-            ),
-
-
-
-
-
-
-            Column(
-              children: [
-                // Profile Header with Cover Image
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    // Cover Image with Flowers
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: controller.user.value.profilePicture,
-                        fit: BoxFit.cover,
-                        width: 100,
-                        height: 100,
-                        placeholder: (context, url) => CircularProgressIndicator(
-                          color: Color(0xFFFF5A60),
-                        ),
-                        errorWidget: (context, url, error) => Icon(
-                          Icons.broken_image,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-
-                    // Profile Picture
-                    Positioned(
-                      bottom: -50,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 4),
-                            ),
-                            child: const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage('https://i.imgur.com/JQZm8Qd.jpg'),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Edit Button
-                    Positioned(
-                      top: 40,
-                      right: 10,
-                      child: IconButton(
-                        onPressed: controller.editProfile,
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.edit, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
+                Positioned(
+                  right: 10.w,
+                  bottom: -40.h,
 
-                // Spacing for Profile Picture
-                const SizedBox(height: 60),
-
-                // Profile Info
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Username
-                      Obx(() => Text(
-                        controller.username.value,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
+                      CustomText(
+                        text: 'Public Profile',
+                        fontSize: 10.sp,
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      const SizedBox(width: 8),
+                      Obx(
+                        () => Transform.scale(
+                          scale: 0.7,
 
-                      const SizedBox(height: 15),
-
-                      // Public Profile Toggle
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Public profile',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Obx(() => Switch(
+                          child: Switch(
                             value: controller.isPublic.value,
-                            onChanged: (value) => controller.togglePublicProfile(),
+                            onChanged:
+                                (value) => controller.togglePublicProfile(),
                             activeColor: Colors.red,
-                          )),
-                        ],
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Profile Details
-                      Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // Bio
-                            ProfileInfoItem(
-                              icon: Icons.pets,
-                              text: controller.bio.value,
-                              color: Colors.red.shade300,
-                            ),
-
-                            const Divider(height: 20),
-
-                            // Date
-                            ProfileInfoItem(
-                              icon: Icons.calendar_today,
-                              text: controller.date.value,
-                              color: Colors.red.shade300,
-                            ),
-
-                            const Divider(height: 20),
-
-                            // Gender
-                            ProfileInfoItem(
-                              icon: Icons.person,
-                              text: controller.gender.value,
-                              color: Colors.red.shade300,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-
-                      const SizedBox(height: 25),
-
-                      // Action Buttons
-                      Row(
-                        children: [
-                          // Add Moment Button
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: controller.addMoment,
-                              icon: const Icon(Icons.add_circle_outline),
-                              label: const Text('Add a moment'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red.shade50,
-                                foregroundColor: Colors.red,
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(width: 15),
-
-                          // Post Button
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: controller.createPost,
-                              icon: const Icon(Icons.post_add),
-                              label: const Text('Post'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
               ],
             ),
+            SizedBox(height: 48.h),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12.h,
+                children: [
+                  CustomText(text: 'Profile', fontSize: 14.sp),
+
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 10.h,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 1.w,
+                        color: AppColors.primary.withOpacity(0.20),
+                      ),
+                      borderRadius: BorderRadius.circular(8.h),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          spacing: 4.h,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProfileIconText(
+                              text: 'Musarrat Tabassum',
+                              icon: IconPath.user,
+                            ),
+                            Row(
+                              children: [
+                                ProfileIconText(
+                                  text: '24',
+                                  icon: IconPath.tree,
+                                ),
+                                SizedBox(width: 36.w),
+                                ProfileIconText(
+                                  text: 'Fur Parent',
+                                  icon: IconPath.fut,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                ProfileIconText(
+                                  text: 'Jan 12',
+                                  icon: IconPath.birth,
+                                ),
+                                SizedBox(width: 8.w),
+                                ProfileIconText(
+                                  text: 'Female',
+                                  icon: IconPath.gender,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ProfileIconText(text: 'Post', icon: IconPath.edit),
+                            ProfileIconText(
+                              text: 'Add a moment',
+                              icon: IconPath.edit,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProfileIconText extends StatelessWidget {
+  const ProfileIconText({super.key, required this.text, required this.icon});
+
+  final String text;
+  final String icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset(icon, color: AppColors.primary, height: 16.h, width: 16.w),
+        SizedBox(width: 4.w),
+        CustomText(text: text, fontSize: 14.sp),
+      ],
     );
   }
 }
@@ -360,28 +266,17 @@ class ProfileInfoItem extends StatelessWidget {
             color: color.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
         const SizedBox(width: 15),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 }
-
-
-
-
 
 //   @override
 //   Widget build(BuildContext context) {
