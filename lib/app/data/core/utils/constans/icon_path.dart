@@ -8,5 +8,6 @@ class IconPath{
   static const  String logo='$_basePath/logo.png';
   static const  String tree='$_basePath/tree.png';
   static const  String user='$_basePath/user.png';
+  static const  String add='$_basePath/add.png';
 
 }

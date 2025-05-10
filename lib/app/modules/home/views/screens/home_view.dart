@@ -21,8 +21,13 @@ class HomeView extends StatelessWidget {
     final HomeController controller = Get.put(HomeController());
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: Image.asset(ImagePath.logo, height: 28.h, width: 62.w),
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding:  EdgeInsets.only(left: 12.h),
+          child: Image.asset(ImagePath.logo, height: 28.h, width: 62.w),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -149,7 +154,26 @@ class HomeView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 12.h,
                 children: [
-                  CustomText(text: 'Profile', fontSize: 14.sp),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(text: 'Profile', fontSize: 14.sp),
+                      Row(
+                        children: [
+                          CustomText(text: 'Edit', fontSize: 10.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textSecondary,
+                          )
+
+                          ,
+                          SizedBox(width: 4.w),
+                          Image.asset(IconPath.edit, color: AppColors.textSecondary, height: 16.h, width: 16.w),
+
+
+                        ],
+                      )
+                    ],
+                  ),
 
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -209,7 +233,7 @@ class HomeView extends StatelessWidget {
                             ProfileIconText(text: 'Post', icon: IconPath.edit),
                             ProfileIconText(
                               text: 'Add a moment',
-                              icon: IconPath.edit,
+                              icon: IconPath.add,
                             ),
                           ],
                         ),
