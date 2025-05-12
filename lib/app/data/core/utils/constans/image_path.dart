@@ -13,6 +13,6 @@ class ImagePath{
   static const  String feed4='$_basePath/feed4.jpg';
   static const  String zone1='$_basePath/zone1.png';
   static const  String zone2='$_basePath/zone2.jpg';
-
+  static const  String pp='$_basePath/pp.jpg';
 
 }
