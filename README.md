@@ -16,7 +16,10 @@ This project implements a Flutter profile page that matches the provided Figma d
 
 ## Screenshots
 
-[Add screenshots here]
+![solueeeee](https://github.com/user-attachments/assets/e43b7a6e-9ec3-414a-8ee0-d0fe6d148ce9)
+![solueeee2](https://github.com/user-attachments/assets/8404dc39-3ddf-42c1-af2f-59dfbdd31202)
+
+![sssssss](https://github.com/user-attachments/assets/70687051-335c-4f07-af03-15bc101ec789)
 
 ## Getting Started
 
@@ -39,17 +42,6 @@ This project implements a Flutter profile page that matches the provided Figma d
 ### Configuration
 
 1. Update the `firebase_options.dart` file with your Firebase configuration
-2. Run the following commands to install the required packages:
-
-\`\`\`bash
-flutter pub get
-\`\`\`
-
-### Running the App
-
-\`\`\`bash
-flutter run
-\`\`\`
 
 ## Project Structure
 
@@ -97,5 +89,16 @@ cd soulee_project
 
 ## Install dependencies
 
+Run the following commands to install the required packages:
+
+\`\`\`bash
 flutter pub get
+\`\`\`
+
+### Running the App
+
+\`\`\`bash
+flutter run
+\`\`\`
+
 
