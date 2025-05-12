@@ -1,152 +1,198 @@
-// import 'dart:ui';
-//
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:soulee_project/app/data/core/utils/constans/image_path.dart';
-//
-// class HomeController extends GetxController {
-//   var isPublic = true.obs;
-//   var memories = <Memory>[].obs;
-//   var feedPosts = <FeedPost>[].obs;
-//   var zones = <Zone>[].obs;
-//
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     // Sample data for memories
-//     memories.addAll([
-//       Memory(
-//         month: 'Jan',
-//         name: 'Trip',
-//         title: 'Beach Day',
-//         imagePath: ImagePath.cover,
-//         color: Colors.blue,
-//       ),
-//       Memory(
-//         month: 'Feb',
-//         name: 'Party',
-//         title: 'Birthday',
-//         imagePath: ImagePath.cover,
-//         color: Colors.red,
-//       ),
-//     ]);
-//
-//     // Sample data for feed posts
-//     feedPosts.addAll([
-//       FeedPost(
-//         userName: 'Musarrat Tabassum',
-//         timeAgo: '2h ago',
-//         content: 'Enjoying a sunny day at the beach!',
-//         imageUrl: 'https://example.com/beach.jpg',
-//         likes: 120,
-//         comments: 15,
-//       ),
-//       FeedPost(
-//         userName: 'John Doe',
-//         timeAgo: '5h ago',
-//         content: 'Loving this new cafe in town.',
-//         imageUrl: null,
-//         likes: 85,
-//         comments: 10,
-//       ),
-//     ]);
-//
-//     // Sample data for zones
-//     zones.addAll([
-//       Zone(
-//         name: 'Pet Lovers',
-//         imagePath: ImagePath.cover,
-//       ),
-//       Zone(
-//         name: 'Travel Buddies',
-//         imagePath: ImagePath.cover,
-//       ),
-//       Zone(
-//         name: 'Foodies',
-//         imagePath: ImagePath.cover,
-//       ),
-//       Zone(
-//         name: 'Fitness Freaks',
-//         imagePath: ImagePath.cover,
-//       ),
-//     ]);
-//   }
-//
-//   void togglePublicProfile() {
-//     isPublic.value = !isPublic.value;
-//   }
-// }
-//
-// class Memory {
-//   final String month;
-//   final String name;
-//   final String title;
-//   final String imagePath;
-//   final Color color;
-//
-//   Memory({
-//     required this.month,
-//     required this.name,
-//     required this.title,
-//     required this.imagePath,
-//     required this.color,
-//   });
-// }
-//
-// class FeedPost {
-//   final String userName;
-//   final String timeAgo;
-//   final String content;
-//   final String? imageUrl;
-//   final int likes;
-//   final int comments;
-//
-//   FeedPost({
-//     required this.userName,
-//     required this.timeAgo,
-//     required this.content,
-//     this.imageUrl,
-//     required this.likes,
-//     required this.comments,
-//   });
-// }
-//
-// class Zone {
-//   final String name;
-//   final String imagePath;
-//
-//   Zone({
-//     required this.name,
-//     required this.imagePath,
-//   });
-// }
-import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:get/get.dart';
 import 'package:soulee_project/app/data/core/utils/constans/image_path.dart';
 import 'package:soulee_project/app/modules/home/models/feeds.dart';
 
+import '../../../data/models/user_models.dart';
 import '../models/memory.dart';
 import '../models/zones.dart';
-
-
+import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 
 
 class HomeController extends GetxController {
+  final TextEditingController nameTXController = TextEditingController();
+  final TextEditingController bioTXController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  RxBool isLoading = false.obs;
+  RxString error = ''.obs;
+  Rx<User?> firebaseUser = Rx<User?>(null);
+  Rx<UserModel> user = UserModel().obs;
   var isPublic = true.obs;
   var selectedTab = 0.obs;
   final RxBool isSeeAll = false.obs;
+
+  void togglePublicProfile() {
+    isPublic.value = !isPublic.value;
+  }
 
   void toggleSeeAll() {
     isSeeAll.value = !isSeeAll.value;
     if (isSeeAll.value) {
     }
   }
+  @override
+  void onInit() {
+    super.onInit();
+    firebaseUser.bindStream(_auth.authStateChanges());
+    ever(firebaseUser, _handleAuthChanged);
+  }
+
+  _handleAuthChanged(User? user) async {
+    if (user != null) {
+      log("User authenticated: ${user.email}");
+      await getUserData();
+    }
+  }
+
+  /// Auto-login with the existing Firebase user
+  Future<void> autoLogin() async {
+    isLoading.value = true;
+    error.value = '';
+
+    try {
+      /// Check if already logged in
+      if (_auth.currentUser != null) {
+        if (kDebugMode) {
+          print("Already logged in as: ${_auth.currentUser!.email}");
+        }
+        await getUserData();
+        isLoading.value = false;
+        return;
+      }
+
+      if (kDebugMode) {
+        print("Auto-login with soulee@gmail.com");
+      }
+      await _auth.signInWithEmailAndPassword(
+        email: 'soulee@gmail.com',
+        password: '123456',
+      );
+      if (kDebugMode) {
+        print("Auto-login successful");
+      }
+
+      /// Check if user exists in Firestore
+      //await _checkUserExists(_auth.currentUser!.uid);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Auto-login failed: $e");
+      }
+      error.value = 'Failed to auto-login: ${e.toString()}';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Future<void> _checkUserExists(String uid) async {
+  //   try {
+  //     final doc = await _firestore.collection('users').doc(uid).get();
+  //
+  //     if (doc.exists) {
+  //       print("User exists in Firestore, loading data");
+  //       user.value = UserModel.fromMap(doc.data()!);
+  //     } else {
+  //       print("User doesn't exist in Firestore, creating new user data");
+  //       await _createNewUserData(uid);
+  //     }
+  //   } catch (e) {
+  //     print("Error checking user: $e");
+  //     error.value = 'Failed to check user: ${e.toString()}';
+  //   }
+  // }
+
+
+  /// Fetching user data from Firebase Firestore
+  Future<void> getUserData() async {
+    isLoading.value = true;
+    error.value = '';
+    try {
+      final uid = _auth.currentUser!.uid;
+      final doc = await _firestore.collection('users').doc(uid).get();
+
+      if (doc.exists) {
+        user.value = UserModel.fromMap(doc.data()!);
+      } else {
+        error.value = 'User data not found';
+      }
+    } catch (e) {
+      if (e.toString().contains("cloud_firestore/unavailable")) {
+        error.value = 'Firestore is temporarily unavailable. Please try again later.';
+      } else {
+        error.value = 'Failed to load user data: ${e.toString()}';
+      }
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
 
 
+  /// Update Profile (Name, Bio, Picture)
+  Future<void> updateProfile({String? name, String? bio}) async {
+    isLoading.value = true;
+    error.value = '';
+    try {
+      if (_auth.currentUser != null) {
+        final uid = _auth.currentUser!.uid;
+        final updates = <String, dynamic>{};
+        if (name != null && name.isNotEmpty) {
+          updates['name'] = name;
+          await _auth.currentUser!.updateDisplayName(name);
+        }
+        if (bio != null) {
+          updates['bio'] = bio;
+        }
+        if (updates.isNotEmpty) {
+          await _firestore.collection('users').doc(uid).update(updates);
+          await getUserData();
+        }
+      }
+    } catch (e) {
+      error.value = 'Failed to update profile: ${e.toString()}';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+/// Update profile picture (with ImagePicker and Firebase Storage)
+  Future<void> updateProfilePicture() async {
+    isLoading.value = true;
+    error.value = '';
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null && _auth.currentUser != null) {
+        final uid = _auth.currentUser!.uid;
+        final file = File(pickedFile.path);
+        final ref = _storage.ref().child('profile_pictures/$uid.jpg');
+        await ref.putFile(file);
+        final url = await ref.getDownloadURL();
+
+        await _firestore.collection('users').doc(uid).update({
+          'profilePicture': url,
+        });
+
+        await _auth.currentUser!.updatePhotoURL(url);
+        await getUserData();
+      }
+    } catch (e) {
+      error.value = 'Failed to update profile picture: ${e.toString()}';
+    } finally {
+      isLoading.value = false;
+    }
+  }
   final RxList<Memory> memories = <Memory>[
     Memory(
       id: '1',
@@ -241,43 +287,14 @@ class HomeController extends GetxController {
 
     ),
   ].obs;
-  //
-  // final RxList<Map<String, dynamic>> feeds = <Map<String, dynamic>>[
-  //   {
-  //     'id': '1',
-  //     'userName': 'Sarah Johnson',
-  //     'userAvatar': 'assets/images/avatar1.jpg',
-  //     'timeAgo': '2 hours ago',
-  //     'content': 'A wonderful day with my furry friend! #catlover',
-  //     'imagePath': 'assets/images/feed1.jpg',
-  //     'likes': 24,
-  //     'comments': 5,
-  //   },
-  //   {
-  //     'id': '2',
-  //     'userName': 'Michael Chen',
-  //     'userAvatar': 'assets/images/avatar2.jpg',
-  //     'timeAgo': '5 hours ago',
-  //     'content': 'Sharing my journey with PCOS. Stay strong everyone!',
-  //     'imagePath': 'assets/images/feed2.jpg',
-  //     'likes': 56,
-  //     'comments': 12,
-  //   },
-  // ].obs;
 
-  void togglePublicProfile() {
-    isPublic.value = !isPublic.value;
-  }
+
 
   void addMemory() {
-    // Implementation for adding a new memory
     Get.snackbar('Add Memory', 'Feature coming soon!');
   }
 
-  void viewZone(String zoneId) {
-    // Implementation for viewing a zone
-    Get.snackbar('View Zone', 'Opening zone $zoneId');
-  }
+
 
 
 }

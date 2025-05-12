@@ -2,7 +2,7 @@ class ImagePath{
   ImagePath._();
   static const  String _basePath='assets/images';
   static const  String logo='$_basePath/Logo.png';
-  static const  String profile='$_basePath/profile.png';
+  static const  String profile='$_basePath/profile1.png';
   static const  String memory2='$_basePath/memory2.png';
   static const  String memory3='$_basePath/memory3.png';
 
