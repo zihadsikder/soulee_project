@@ -67,30 +67,17 @@ class HomeView extends StatelessWidget {
                             bottomLeft: Radius.circular(220),
                               bottomRight: Radius.circular(210),
                             ),
+                            image: DecorationImage(
+                              image: controller.user.value.profilePicture != null
+                                  ? NetworkImage(controller.user.value.profilePicture)
+                                  : AssetImage(ImagePath.profile) as ImageProvider,
+                              fit: BoxFit.fill,
+                            ),
                             border: Border.all(
                               width: 2,
                               color: AppColors.primary,
                             ),
                           ),
-                          child: controller.user.value.profilePicture != null
-                              ? Image.network(
-                            controller.user.value.profilePicture!,
-                            fit: BoxFit.fill,
-                            width: 99.w,
-                            height: 103.h,
-                          )
-                              : Image.asset(
-                            ImagePath.profile,
-                            fit: BoxFit.fill,
-                            width: 99.w,
-                            height: 103.h,
-                          ),
-                          // child: Image.asset(
-                          //   ImagePath.profile,
-                          //   fit: BoxFit.fill,
-                          //   width: 99.w,
-                          //   height: 103.h,
-                          // ),
                         ),
                         Positioned(
                           bottom: 2,
@@ -383,7 +370,7 @@ class HomeView extends StatelessWidget {
                     ),
                     SizedBox(height: 12.h),
                     SizedBox(
-                      height: 130,
+                      //height: 130,
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
