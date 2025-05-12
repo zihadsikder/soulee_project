@@ -120,49 +120,32 @@
 //     required this.imagePath,
 //   });
 // }
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:soulee_project/app/data/core/utils/constans/image_path.dart';
+import 'package:soulee_project/app/modules/home/models/feeds.dart';
 
-class Memory {
-  final String id;
-  final String month;
-  final String name;
-  final String title;
-  final String imagePath;
-  final String profileImage;
+import '../models/memory.dart';
+import '../models/zones.dart';
 
 
-  Memory({
-    required this.id,
-    required this.month,
-    required this.name,
-    required this.title,
-    required this.imagePath,
-    required this.profileImage,
 
-  });
-}
 
-class Zone {
-  final String id;
-  final String title;
-  final String imagePath;
-  final int memberCount;
-  final bool isNew;
-
-  Zone({
-    required this.id,
-    required this.title,
-    required this.imagePath,
-    required this.memberCount,
-    this.isNew = false,
-  });
-}
 
 class HomeController extends GetxController {
   var isPublic = true.obs;
   var selectedTab = 0.obs;
+  final RxBool isSeeAll = false.obs;
+
+  void toggleSeeAll() {
+    isSeeAll.value = !isSeeAll.value;
+    if (isSeeAll.value) {
+    }
+  }
+
+
 
   final RxList<Memory> memories = <Memory>[
     Memory(
@@ -184,7 +167,7 @@ class HomeController extends GetxController {
 
     ),
     Memory(
-      id: '2',
+      id: '3',
       month: 'FEB',
       name: 'Memories',
       title: 'Valentine',
@@ -194,64 +177,96 @@ class HomeController extends GetxController {
     ),
   ].obs;
 
-  final RxList<Zone> zones = <Zone>[
-    Zone(
+
+  final RxList<Feeds> feeds = <Feeds>[
+    Feeds(
       id: '1',
-      title: 'Motherhood Fur Parents Zone',
-      imagePath: 'assets/images/zone1.jpg',
-      memberCount: 120,
-      isNew: true,
+      month: 'September',
+      name: 'Saiti Martin',
+      title: 'A Journey to All Ways Remember',
+      imagePath: ImagePath.feed1,
+      profileImage: ImagePath.pp,
+
     ),
-    Zone(
+    Feeds(
       id: '2',
-      title: 'PCOS APARTMENT',
-      imagePath: 'assets/images/zone2.jpg',
-      memberCount: 85,
+      month: 'September',
+      name: 'Saiti Martin',
+      title: 'পূজার দিন',
+      imagePath: ImagePath.feed2,
+      profileImage: ImagePath.pp,
+
     ),
-    Zone(
+    Feeds(
       id: '3',
-      title: 'Relationship',
-      imagePath: 'assets/images/zone3.jpg',
-      memberCount: 210,
+      month: 'September',
+      name: 'Saiti Martin',
+      title: 'A Journey to All Ways Remember',
+      imagePath: ImagePath.feed3,
+      profileImage: ImagePath.pp,
+
     ),
-    Zone(
+    Feeds(
       id: '4',
-      title: 'Mental Health',
-      imagePath: 'assets/images/zone4.jpg',
-      memberCount: 150,
-      isNew: true,
+      month: 'September',
+      name: 'Saiti Martin',
+      title: 'Letest Artwork',
+      imagePath: ImagePath.feed4,
+      profileImage: ImagePath.pp,
+
     ),
   ].obs;
 
-  final RxList<Map<String, dynamic>> feeds = <Map<String, dynamic>>[
-    {
-      'id': '1',
-      'userName': 'Sarah Johnson',
-      'userAvatar': 'assets/images/avatar1.jpg',
-      'timeAgo': '2 hours ago',
-      'content': 'A wonderful day with my furry friend! #catlover',
-      'imagePath': 'assets/images/feed1.jpg',
-      'likes': 24,
-      'comments': 5,
-    },
-    {
-      'id': '2',
-      'userName': 'Michael Chen',
-      'userAvatar': 'assets/images/avatar2.jpg',
-      'timeAgo': '5 hours ago',
-      'content': 'Sharing my journey with PCOS. Stay strong everyone!',
-      'imagePath': 'assets/images/feed2.jpg',
-      'likes': 56,
-      'comments': 12,
-    },
+  final RxList<Zones> zones = <Zones>[
+    Zones(
+      id: '1',
+      title: 'Motherhood Fur Parents Zone',
+      imagePath: ImagePath.zone1,
+
+    ),
+    Zones(
+      id: '2',
+      title: 'BRAC UNI CSE DEPARTMENT',
+      imagePath:  ImagePath.zone2,
+    ),
+    Zones(
+      id: '3',
+      title: 'MotherLand Fur Parents Zone',
+      imagePath:  ImagePath.memory2,
+    ),
+    Zones(
+      id: '4',
+      title: 'World UNI CSE DEPARTMENT',
+      imagePath: ImagePath.memory3,
+
+    ),
   ].obs;
+  //
+  // final RxList<Map<String, dynamic>> feeds = <Map<String, dynamic>>[
+  //   {
+  //     'id': '1',
+  //     'userName': 'Sarah Johnson',
+  //     'userAvatar': 'assets/images/avatar1.jpg',
+  //     'timeAgo': '2 hours ago',
+  //     'content': 'A wonderful day with my furry friend! #catlover',
+  //     'imagePath': 'assets/images/feed1.jpg',
+  //     'likes': 24,
+  //     'comments': 5,
+  //   },
+  //   {
+  //     'id': '2',
+  //     'userName': 'Michael Chen',
+  //     'userAvatar': 'assets/images/avatar2.jpg',
+  //     'timeAgo': '5 hours ago',
+  //     'content': 'Sharing my journey with PCOS. Stay strong everyone!',
+  //     'imagePath': 'assets/images/feed2.jpg',
+  //     'likes': 56,
+  //     'comments': 12,
+  //   },
+  // ].obs;
 
   void togglePublicProfile() {
     isPublic.value = !isPublic.value;
-  }
-
-  void changeTab(int index) {
-    selectedTab.value = index;
   }
 
   void addMemory() {
@@ -264,21 +279,5 @@ class HomeController extends GetxController {
     Get.snackbar('View Zone', 'Opening zone $zoneId');
   }
 
-  void likeFeed(String feedId) {
-    final index = feeds.indexWhere((feed) => feed['id'] == feedId);
-    if (index != -1) {
-      feeds[index]['likes'] = feeds[index]['likes'] + 1;
-      feeds.refresh();
-    }
-  }
 
-  void commentOnFeed(String feedId) {
-    // Implementation for commenting on a feed
-    Get.snackbar('Comment', 'Opening comment section for post $feedId');
-  }
-
-  void shareFeed(String feedId) {
-    // Implementation for sharing a feed
-    Get.snackbar('Share', 'Sharing post $feedId');
-  }
 }

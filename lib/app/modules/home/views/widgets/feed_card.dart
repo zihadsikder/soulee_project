@@ -1,152 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:soulee_project/app/data/core/common/widgets/custom_text.dart';
-import 'package:soulee_project/app/data/core/utils/constans/app_sizer.dart';
 import 'package:soulee_project/app/data/core/utils/constans/app_color.dart';
+import 'package:soulee_project/app/data/core/utils/constans/app_sizer.dart';
+import 'package:soulee_project/app/modules/home/models/feeds.dart';
+import 'package:soulee_project/app/modules/home/views/widgets/text_container.dart';
+
+import '../../../../data/core/utils/constans/image_path.dart';
+import 'memory_card.dart';
 
 class FeedCard extends StatelessWidget {
-  final Map<String, dynamic> feed;
-  final VoidCallback onLike;
-  final VoidCallback onComment;
-  final VoidCallback onShare;
+  final Feeds feeds;
 
   const FeedCard({
-    Key? key,
-    required this.feed,
-    required this.onLike,
-    required this.onComment,
-    required this.onShare,
-  }) : super(key: key);
+    super.key,
+    required this.feeds,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.h),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // User info and post time
-          Padding(
-            padding: EdgeInsets.all(12.h),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 20.h,
-                  backgroundImage: AssetImage(feed['userAvatar']),
-                ),
-                SizedBox(width: 12.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: feed['userName'],
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    CustomText(
-                      text: feed['timeAgo'],
-                      fontSize: 12.sp,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.more_vert),
-                  onPressed: () {},
-                ),
-              ],
+    return Stack(
+
+      children: [
+        Container(
+          margin: EdgeInsets.only(right: 12.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.h),
+            image: DecorationImage(
+              image: AssetImage(feeds.imagePath),
+              fit: BoxFit.cover,
             ),
           ),
-
-          // Post content
-          if (feed['content'] != null && feed['content'].isNotEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: CustomText(
-                text: feed['content'],
-                fontSize: 14.sp,
+        ),
+        // Text over the image - Month and Name
+        Positioned(
+          top: 13.h,
+          left: 13.w,
+          child: TextContainer(text: feeds.month),
+        ),
+        Positioned(
+          top: 13.h,
+          right: 13.w,
+          child: TextContainer(text: feeds.name),
+        ),
+        // Title text at the bottom
+        Positioned(
+          bottom: 13.h,
+          left: 13.w,
+          right: 13.w,
+          child: Row(
+            children: [
+              // Profile Image Icon
+              Container(
+                width: 15.w,
+                height: 17.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage(ImagePath.pp),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    ImagePath.pp,
+                    fit: BoxFit.fill,
+                    width: 15.w,
+                    height: 17.h,
+                  ),
+                ),
               ),
-            ),
-
-          // Post image
-          if (feed['imagePath'] != null)
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 12.h),
-              width: double.infinity,
-              height: 200.h,
-              child: Image.asset(
-                feed['imagePath'],
-                fit: BoxFit.cover,
-              ),
-            ),
-
-          // Like, comment, share buttons
-          Padding(
-            padding: EdgeInsets.all(12.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    _buildActionButton(
-                      icon: Icons.favorite_border,
-                      label: '${feed['likes']}',
-                      onTap: onLike,
-                    ),
-                    SizedBox(width: 16.w),
-                    _buildActionButton(
-                      icon: Icons.chat_bubble_outline,
-                      label: '${feed['comments']}',
-                      onTap: onComment,
-                    ),
-                  ],
-                ),
-                _buildActionButton(
-                  icon: Icons.share_outlined,
-                  label: 'Share',
-                  onTap: onShare,
-                ),
-              ],
-            ),
+              SizedBox(width: 6.w),
+              // Title text
+              TextContainerProfile(text: feeds.title),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: AppColors.textSecondary,
-          ),
-          SizedBox(width: 4.w),
-          CustomText(
-            text: label,
-            fontSize: 12.sp,
-            color: AppColors.textSecondary,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
+

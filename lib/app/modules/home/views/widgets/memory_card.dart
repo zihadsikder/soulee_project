@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:soulee_project/app/data/core/common/widgets/custom_text.dart';
 import 'package:soulee_project/app/data/core/utils/constans/app_color.dart';
 import 'package:soulee_project/app/data/core/utils/constans/app_sizer.dart';
-import 'package:soulee_project/app/modules/home/controllers/home_controller.dart';
+import 'package:soulee_project/app/modules/home/views/widgets/text_container.dart';
 
 import '../../../../data/core/utils/constans/image_path.dart';
+import '../../models/memory.dart';
 
 class MemoryCard extends StatelessWidget {
   final Memory memory;
@@ -21,7 +21,7 @@ class MemoryCard extends StatelessWidget {
       children: [
         Container(
           height: 107.h,
-          width: 150.w,
+          width: 120.w,
           margin: EdgeInsets.only(right: 12.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.h),
@@ -29,13 +29,6 @@ class MemoryCard extends StatelessWidget {
             image: DecorationImage(image: AssetImage(memory.imagePath),fit: BoxFit.fill)
           ),
           padding: EdgeInsets.all(10.h),
-          // child: ClipRRect(
-          //   borderRadius: BorderRadius.circular(8.h), // Ensures image doesn't overflow
-          //   child: Image.asset(
-          //
-          //     fit: BoxFit.fill,
-          //   ),
-          // ),
         ),
         Positioned(
           top: 13.h,
@@ -85,7 +78,7 @@ class MemoryCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 6.w),
-              TextContainer(text: memory.title),
+              TextContainerProfile(text: memory.title),
             ],
           ),
         ),
@@ -94,28 +87,3 @@ class MemoryCard extends StatelessWidget {
   }
 }
 
-class TextContainer extends StatelessWidget {
-  const TextContainer({
-    super.key,
-    required this.text,
-  });
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6.h),
-        color: AppColors.textPrimary,
-      ),
-      child: CustomText(
-        text: text,
-        color: Colors.white,
-        fontSize: 6.sp,
-        fontWeight: FontWeight.w400,
-      ),
-    );
-  }
-}
